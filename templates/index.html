@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Weather App</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+</head>
+
+<body class="{% if weather %}{{ weather.condition }}{% else %}default{% endif %}">
+
+    <div class="weather-animation">
+        <div class="sun"></div>
+
+        <div class="cloud cloud-one"></div>
+        <div class="cloud cloud-two"></div>
+        <div class="cloud cloud-three"></div>
+
+        <div class="rain">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <main class="weather-container">
+        <section class="weather-card">
+            <h1>Weather App</h1>
+
+            <p class="subtitle">
+                Check the current weather and rain forecast
+            </p>
+
+            <form method="POST" class="search-form">
+                <input
+                    type="text"
+                    id="city"
+                    name="city"
+                    placeholder="Enter a city..."
+                    aria-label="City name"
+                    required
+                >
+
+                <button type="submit">Search</button>
+            </form>
+
+            {% if weather %}
+                <section class="weather-result">
+                    <h2>
+                        {{ weather.city }}, {{ weather.country }}
+                    </h2>
+
+                    <p class="description">
+                        {{ weather.description.title() }}
+                    </p>
+
+                    <p class="temperature">
+                        {{ weather.temperature | round }}°C
+                    </p>
+
+                    <div class="weather-summary">
+                        <p>🌤️ {{ weather.current_message }}</p>
+
+                        <p>
+                            {% if weather.rain_expected %}
+                                🌧️
+                            {% else %}
+                                ☀️
+                            {% endif %}
+
+                            {{ weather.forecast_message }}
+                        </p>
+
+                        <p>
+                            Maximum rain chance:
+                            <strong>{{ weather.rain_chance }}%</strong>
+                        </p>
+                    </div>
+
+                    <div class="weather-details">
+                        <div class="detail">
+                            <div class="detail-icon">🌡️</div>
+                            <span>Feels like</span>
+
+                            <strong>
+                                {{ weather.feels_like | round }}°C
+                            </strong>
+                        </div>
+
+                        <div class="detail">
+                            <div class="detail-icon">💧</div>
+                            <span>Humidity</span>
+
+                            <strong>
+                                {{ weather.humidity }}%
+                            </strong>
+                        </div>
+
+                        <div class="detail">
+                            <div class="detail-icon">💨</div>
+                            <span>Wind speed</span>
+
+                            <strong>
+                                {{ weather.wind_speed }} m/s
+                            </strong>
+                        </div>
+                    </div>
+                </section>
+            {% endif %}
+
+            {% if error %}
+                <p class="error-message">{{ error }}</p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>
